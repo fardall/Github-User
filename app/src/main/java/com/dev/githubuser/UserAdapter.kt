@@ -1,5 +1,6 @@
 package com.dev.githubuser
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -31,5 +32,10 @@ class UserAdapter(private val listUser: ArrayList<User>) : RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(listUser[position])
+        holder.itemView.setOnClickListener {
+            val toDetail = Intent(holder.itemView.context, DetailActivity::class.java)
+            toDetail.putExtra(DetailActivity.EXTRA_USER, listUser[position])
+            holder.itemView.context.startActivity(toDetail)
+        }
     }
 }

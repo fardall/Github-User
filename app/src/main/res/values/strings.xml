@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Github User</string>
     <string name="gambar_user">gambar user</string>
+    <string name="pengikut">Pengikut</string>
+    <string name="mengikuti">Mengikuti</string>
+    <string name="repositori">Repositori</string>
+    <string name="tas">tas</string>
 
     <!--    Data Dummy    -->
 

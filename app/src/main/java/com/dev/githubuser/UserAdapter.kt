@@ -12,7 +12,7 @@ class UserAdapter(private val listUser: ArrayList<User>) : RecyclerView.Adapter<
     class ViewHolder(private var binding: ListUserBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(user: User) {
             with(binding) {
-                tvUser.text = user.name
+//                tvUser.text = user.name
                 tvUsername.text = user.username
             }
                 Glide .with(itemView.context)
@@ -34,7 +34,7 @@ class UserAdapter(private val listUser: ArrayList<User>) : RecyclerView.Adapter<
         holder.bind(listUser[position])
         holder.itemView.setOnClickListener {
             val toDetail = Intent(holder.itemView.context, DetailActivity::class.java)
-            toDetail.putExtra(DetailActivity.EXTRA_USER, listUser[position])
+            toDetail.putExtra(DetailActivity.EXTRA_USERNAME, listUser[position].username)
             holder.itemView.context.startActivity(toDetail)
         }
     }

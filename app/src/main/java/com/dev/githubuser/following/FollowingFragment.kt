@@ -1,16 +1,17 @@
-package com.dev.githubuser
+package com.dev.githubuser.following
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dev.githubuser.responses.ItemsItem
+import com.dev.githubuser.adapter.UserAdapter
 import com.dev.githubuser.databinding.FragmentFollowingBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.dev.githubuser.detail.DetailActivity
+import com.dev.githubuser.detail.DetailViewModel
 
 class FollowingFragment : Fragment() {
     private lateinit var binding: FragmentFollowingBinding
@@ -29,38 +30,27 @@ class FollowingFragment : Fragment() {
         val mActivity = activity as DetailActivity
         val username = mActivity.user
 
-        if (mActivity.following != null && mActivity.following!!.toInt() > 0) {
-            Log.d("asd", "onViewCreated: ${mActivity.following}")
-            binding.tvNoData.visibility = View.GONE
-            getFollowing(username)
-        }
+        val viewModel = ViewModelProvider(requireActivity())[FollowingViewModel::class.java]
+        val detailViewModel = ViewModelProvider(requireActivity())[DetailViewModel::class.java]
+        viewModel.getFollowing(username)
 
-    }
-
-    private fun getFollowing(username: String) {
-        showLoading(true)
-        val client = ApiConfig.getApiService().getFollowing(username)
-        client.enqueue(object : Callback<List<ItemsItem>> {
-            override fun onResponse(
-                call: Call<List<ItemsItem>>,
-                response: Response<List<ItemsItem>>
-            ) {
-                if (response.isSuccessful) {
-                    showLoading(false)
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        setFollowingData(responseBody)
-                    }
-                }
+        detailViewModel.followers.observe(requireActivity(), {
+            if (it < 1) {
+                binding.tvNoData.visibility = View.VISIBLE
             }
-
-            override fun onFailure(call: Call<List<ItemsItem>>, t: Throwable) {
-                Log.e("asd", "onFailure: ${t.message}" )
-            }
-
-
         })
+
+        viewModel.listUser.observe(requireActivity(), { user ->
+            setFollowingData(user)
+        })
+
+        viewModel.isLoading.observe(requireActivity(), {
+            showLoading(it)
+        })
+
     }
+
+
 
     private fun setFollowingData(followingResponse: List<ItemsItem>) {
         val listFollowing = ArrayList<ItemsItem>()
@@ -88,6 +78,5 @@ class FollowingFragment : Fragment() {
             binding.progressBar.visibility = View.GONE
         }
     }
-
 
 }

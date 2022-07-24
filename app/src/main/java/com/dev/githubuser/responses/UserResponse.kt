@@ -1,4 +1,4 @@
-package com.dev.githubuser
+package com.dev.githubuser.responses
 
 import com.google.gson.annotations.SerializedName
 

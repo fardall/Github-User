@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp"
-    tools:context=".FollowersFragment">
+    tools:context=".followers.FollowersFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_listUser"
@@ -38,6 +38,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:textSize="18sp"
+        android:visibility="gone"
         android:textStyle="italic"
         android:text="@string/no_data_to_be_shown" />
 

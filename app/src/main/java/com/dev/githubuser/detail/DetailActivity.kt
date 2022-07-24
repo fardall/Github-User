@@ -1,22 +1,20 @@
-package com.dev.githubuser
+package com.dev.githubuser.detail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.dev.githubuser.R
+import com.dev.githubuser.responses.UserResponse
 import com.dev.githubuser.databinding.ActivityDetailBinding
 import com.google.android.material.tabs.TabLayoutMediator
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
+    private lateinit var viewModel: DetailViewModel
     lateinit var user: String
-    var followers: String? = null
-    var following: String? = null
 
     companion object {
         const val EXTRA_USERNAME = "extra_username"
@@ -34,33 +32,28 @@ class DetailActivity : AppCompatActivity() {
 
         user = intent.getStringExtra(EXTRA_USERNAME)!!
 
-        getUser(user)
+        viewModel = ViewModelProvider(this)[DetailViewModel::class.java]
+        viewModel.getUser(user)
 
+        viewModel.user.observe(this, { user ->
+            setUserData(user)
+        })
+
+        viewModel.isLoading.observe(this, {
+            showLoading(it)
+        })
+
+        setTabPager()
+
+    }
+
+    private fun setTabPager() {
         val sectionsPagerAdapter = SectionsPagerAdapter(this)
         binding.viewPager.adapter = sectionsPagerAdapter
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.text = resources.getString(TAB_TITLES[position])
         }.attach()
         supportActionBar?.elevation = 0f
-
-    }
-
-    private fun getUser(username: String) {
-        showLoading(true)
-        val client = ApiConfig.getApiService().getUser(username)
-        client.enqueue(object : Callback<UserResponse> {
-            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-                if (response.isSuccessful) {
-                    showLoading(false)
-                    val responseBody = response.body()
-                    setUserData(responseBody)
-                }
-            }
-
-            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                Log.e("asd", "onFailure: ${t.message}")
-            }
-        })
     }
 
     private fun setUserData(user: UserResponse?) {
@@ -79,8 +72,6 @@ class DetailActivity : AppCompatActivity() {
                 .circleCrop()
                 .into(binding.includeUser.ivUser)
 
-            following = user.following.toString()
-            followers = user.followers.toString()
         }
     }
 

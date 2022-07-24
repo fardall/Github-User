@@ -17,8 +17,6 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val listUser = ArrayList<User>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         findUser()
+
 
     }
 
@@ -59,13 +58,13 @@ class MainActivity : AppCompatActivity() {
 
     // cari user
     private fun findUser(username: String = "Fardal") {
+        showLoading(true)
         val client = ApiConfig.getApiService().findUsers(username)
         client.enqueue(object : Callback<UsersResponse> {
             override fun onResponse(
                 call: Call<UsersResponse>,
                 response: Response<UsersResponse>
             ) {
-                showLoading(true)
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     showLoading(false)
@@ -83,13 +82,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setUsersData(listItem: List<ItemsItem>) {
+        val listUser = ArrayList<ItemsItem>()
+
         listUser.clear()
         for (i in listItem.indices) {
-            val user = User(username = listItem[i].login, photo = listItem[i].avatarUrl)
+            val user = listItem[i]
             listUser.add(user)
         }
 
-        val adapter = UserAdapter(listUser)
+        val adapter = UserAdapter(listUser, 1)
 
         with(binding) {
             rvUser.setHasFixedSize(true)

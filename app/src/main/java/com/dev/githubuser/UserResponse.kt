@@ -27,4 +27,5 @@ data class UserResponse(
 
 	@field:SerializedName("login")
 	val login: String
+
 )

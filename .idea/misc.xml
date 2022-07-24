@@ -3,9 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Dev/AndroidStudioProject/Github-User/app/src/main/res/layout/activity_detail.xml" value="0.25" />
-        <entry key="..\:/Dev/AndroidStudioProject/Github-User/app/src/main/res/layout/activity_main.xml" value="0.39199157007376184" />
+        <entry key="..\:/Dev/AndroidStudioProject/Github-User/app/src/main/res/layout/activity_detail.xml" value="0.33" />
+        <entry key="..\:/Dev/AndroidStudioProject/Github-User/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Dev/AndroidStudioProject/Github-User/app/src/main/res/layout/fragment_followers.xml" value="0.1" />
+        <entry key="..\:/Dev/AndroidStudioProject/Github-User/app/src/main/res/layout/fragment_following.xml" value="0.25" />
         <entry key="..\:/Dev/AndroidStudioProject/Github-User/app/src/main/res/layout/list_user.xml" value="0.33" />
+        <entry key="..\:/Dev/AndroidStudioProject/Github-User/app/src/main/res/layout/user_detail.xml" value="0.33" />
+        <entry key="..\:/Dev/AndroidStudioProject/Github-User/app/src/main/res/layout/user_followers.xml" value="0.30013831258644535" />
+        <entry key="..\:/Dev/AndroidStudioProject/Github-User/app/src/main/res/layout/user_follows.xml" value="0.33" />
         <entry key="..\:/Dev/AndroidStudioProject/Github-User/app/src/main/res/menu/option_menu.xml" value="0.25" />
       </map>
     </option>

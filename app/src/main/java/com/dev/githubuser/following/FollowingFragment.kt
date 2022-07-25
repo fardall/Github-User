@@ -27,12 +27,12 @@ class FollowingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mActivity = activity as DetailActivity
-        val username = mActivity.user
-
         val viewModel = ViewModelProvider(requireActivity())[FollowingViewModel::class.java]
         val detailViewModel = ViewModelProvider(requireActivity())[DetailViewModel::class.java]
-        viewModel.getFollowing(username)
+
+        detailViewModel.username.observe(requireActivity(), {
+            viewModel.getFollowing(it)
+        })
 
         detailViewModel.following.observe(requireActivity(), {
             if (it < 1) {
@@ -49,8 +49,6 @@ class FollowingFragment : Fragment() {
         })
 
     }
-
-
 
     private fun setFollowingData(followingResponse: List<ItemsItem>) {
         val listFollowing = ArrayList<ItemsItem>()

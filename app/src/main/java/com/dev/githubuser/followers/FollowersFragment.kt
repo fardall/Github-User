@@ -7,11 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dev.githubuser.responses.ItemsItem
 import com.dev.githubuser.adapter.UserAdapter
 import com.dev.githubuser.databinding.FragmentFollowersBinding
-import com.dev.githubuser.detail.DetailActivity
 import com.dev.githubuser.detail.DetailViewModel
+import com.dev.githubuser.responses.ItemsItem
 
 class FollowersFragment : Fragment() {
     private lateinit var binding: FragmentFollowersBinding
@@ -28,12 +27,12 @@ class FollowersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mActivity = activity as DetailActivity
-        val username = mActivity.user
-
         val viewModel = ViewModelProvider(requireActivity())[FollowersViewModel::class.java]
         val detailViewModel = ViewModelProvider(requireActivity())[DetailViewModel::class.java]
-        viewModel.getFollowers(username)
+
+        detailViewModel.username.observe(requireActivity(), {
+            viewModel.getFollowers(it)
+        })
 
         detailViewModel.followers.observe(requireActivity(), {
             if (it < 1) {

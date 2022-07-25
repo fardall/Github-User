@@ -24,6 +24,8 @@ class DetailViewModel : ViewModel() {
     private val _following = MutableLiveData<Int>()
     val following: LiveData<Int> = _following
 
+    val username = MutableLiveData<String>()
+
     fun getUser(username: String) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getUser(username)

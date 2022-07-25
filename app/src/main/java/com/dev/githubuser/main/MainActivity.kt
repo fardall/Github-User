@@ -9,10 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import com.dev.githubuser.responses.ItemsItem
 import com.dev.githubuser.R
 import com.dev.githubuser.adapter.UserAdapter
 import com.dev.githubuser.databinding.ActivityMainBinding
+import com.dev.githubuser.responses.ItemsItem
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -26,8 +26,14 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.findUser()
 
-        viewModel.listUser.observe(this, { user ->
-            setUsersData(user)
+        viewModel.listUser.observe(this, { listUser ->
+            if (listUser.isEmpty()) {
+                binding.tvNoData.visibility = View.VISIBLE
+            } else {
+                binding.tvNoData.visibility = View.GONE
+            }
+            setUsersData(listUser)
+
         })
 
         viewModel.isLoading.observe(this, {

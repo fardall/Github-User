@@ -14,10 +14,10 @@ import com.google.android.material.tabs.TabLayoutMediator
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private lateinit var viewModel: DetailViewModel
-    lateinit var user: String
 
     companion object {
         const val EXTRA_USERNAME = "extra_username"
+
         @StringRes
         private val TAB_TITLES = intArrayOf(
             R.string.tab_text_1,
@@ -30,10 +30,13 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        user = intent.getStringExtra(EXTRA_USERNAME)!!
-
         viewModel = ViewModelProvider(this)[DetailViewModel::class.java]
-        viewModel.getUser(user)
+
+        viewModel.username.value = intent.getStringExtra(EXTRA_USERNAME)!!
+
+        viewModel.username.observe(this, {
+            viewModel.getUser(it)
+        })
 
         viewModel.user.observe(this, { user ->
             setUserData(user)
@@ -67,7 +70,7 @@ class DetailActivity : AppCompatActivity() {
                 tvFollowers.text = user.followers.toString()
                 tvFollowing.text = user.following.toString()
             }
-            Glide .with(this@DetailActivity)
+            Glide.with(this@DetailActivity)
                 .load(user.avatarUrl)
                 .circleCrop()
                 .into(binding.includeUser.ivUser)

@@ -19,7 +19,7 @@ class MainViewModel : ViewModel() {
     val listUser: LiveData<List<ItemsItem>> = _listUser
 
     // cari user
-    fun findUser(username: String = "Fardal") {
+    fun findUser(username: String = "Fardall") {
         _isLoading.value = true
         val client = ApiConfig.getApiService().findUsers(username)
         client.enqueue(object : Callback<UsersResponse> {

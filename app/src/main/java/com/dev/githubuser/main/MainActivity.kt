@@ -2,21 +2,32 @@ package com.dev.githubuser.main
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dev.githubuser.R
 import com.dev.githubuser.adapter.UserAdapter
 import com.dev.githubuser.databinding.ActivityMainBinding
 import com.dev.githubuser.responses.ItemsItem
+import com.dev.githubuser.settings.SettingPreferences
+import com.dev.githubuser.settings.SettingsActivity
+import com.dev.githubuser.settings.SettingsViewModel
+import com.dev.githubuser.settings.ViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +35,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        val pref = SettingPreferences.getInstance(dataStore)
+        val settingsViewModel = ViewModelProvider(this, ViewModelFactory(pref))[SettingsViewModel::class.java]
+
+        settingsViewModel.getThemeSettings().observe(this,
+            { isDarkModeActive: Boolean ->
+                if (isDarkModeActive) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+            })
+
         viewModel.findUser()
 
         viewModel.listUser.observe(this, { listUser ->
@@ -64,6 +87,17 @@ class MainActivity : AppCompatActivity() {
 
         })
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.settings -> {
+                val toSettings = Intent(this, SettingsActivity::class.java)
+                startActivity(toSettings)
+                true
+            }
+            else -> true
+        }
     }
 
     private fun setUsersData(listItem: List<ItemsItem>) {

@@ -34,7 +34,7 @@ class FollowingFragment : Fragment() {
         val detailViewModel = ViewModelProvider(requireActivity())[DetailViewModel::class.java]
         viewModel.getFollowing(username)
 
-        detailViewModel.followers.observe(requireActivity(), {
+        detailViewModel.following.observe(requireActivity(), {
             if (it < 1) {
                 binding.tvNoData.visibility = View.VISIBLE
             }

@@ -21,12 +21,9 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val pref = SettingPreferences.getInstance(dataStore)
-        val viewModel = ViewModelProvider(
-            this,
-            ViewModelFactory(pref)
-        )[SettingsViewModel::class.java]
+        val viewModel = obtainViewModel(this, pref)
 
-        viewModel.getThemeSettings().observe(this,
+        viewModel.getThemeSettings()?.observe(this,
             { isDarkModeActive: Boolean ->
                 if (isDarkModeActive) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -41,5 +38,10 @@ class SettingsActivity : AppCompatActivity() {
             viewModel.saveThemeSetting(isChecked)
         }
 
+    }
+
+    private fun obtainViewModel(activity: AppCompatActivity, preferences: SettingPreferences): SettingsViewModel {
+        val factory = ViewModelFactory.getInstance(activity.application, pref = preferences)
+        return ViewModelProvider(activity, factory)[SettingsViewModel::class.java]
     }
 }

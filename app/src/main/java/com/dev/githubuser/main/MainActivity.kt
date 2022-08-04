@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.dev.githubuser.R
 import com.dev.githubuser.adapter.UserAdapter
 import com.dev.githubuser.databinding.ActivityMainBinding
+import com.dev.githubuser.favorite.FavoriteActivity
 import com.dev.githubuser.responses.ItemsItem
 import com.dev.githubuser.settings.SettingPreferences
 import com.dev.githubuser.settings.SettingsActivity
@@ -36,9 +37,9 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         val pref = SettingPreferences.getInstance(dataStore)
-        val settingsViewModel = ViewModelProvider(this, ViewModelFactory(pref))[SettingsViewModel::class.java]
+        val settingsViewModel = obtainViewModel(this, pref)
 
-        settingsViewModel.getThemeSettings().observe(this,
+        settingsViewModel.getThemeSettings()?.observe(this,
             { isDarkModeActive: Boolean ->
                 if (isDarkModeActive) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -63,6 +64,11 @@ class MainActivity : AppCompatActivity() {
             showLoading(it)
         })
 
+    }
+
+    private fun obtainViewModel(activity: AppCompatActivity, preferences: SettingPreferences): SettingsViewModel {
+        val factory = ViewModelFactory.getInstance(activity.application, pref = preferences)
+        return ViewModelProvider(activity, factory)[SettingsViewModel::class.java]
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -94,6 +100,11 @@ class MainActivity : AppCompatActivity() {
             R.id.settings -> {
                 val toSettings = Intent(this, SettingsActivity::class.java)
                 startActivity(toSettings)
+                true
+            }
+            R.id.favorite -> {
+                val toFavorite = Intent(this, FavoriteActivity::class.java)
+                startActivity(toFavorite)
                 true
             }
             else -> true

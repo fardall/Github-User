@@ -4,13 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dev.githubuser.adapter.UserAdapter
+import com.dev.githubuser.data.remote.responses.UserResponse
 import com.dev.githubuser.databinding.FragmentFollowersBinding
 import com.dev.githubuser.detail.DetailViewModel
-import com.dev.githubuser.responses.ItemsItem
+import com.dev.githubuser.main.UserAdapter
+import com.dev.githubuser.settings.ViewModelFactory
 
 class FollowersFragment : Fragment() {
     private lateinit var binding: FragmentFollowersBinding
@@ -27,11 +29,17 @@ class FollowersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val viewModel = ViewModelProvider(requireActivity())[FollowersViewModel::class.java]
+        val viewModel = obtainViewModel(activity as AppCompatActivity)
         val detailViewModel = ViewModelProvider(requireActivity())[DetailViewModel::class.java]
 
-        detailViewModel.username.observe(requireActivity(), {
-            viewModel.getFollowers(it)
+        detailViewModel.username.observe(requireActivity(), { username ->
+            showLoading(true)
+            viewModel.getFollowers(username).observe(requireActivity(), { user ->
+                if (user != null) {
+                    setFollowersData(user)
+                    showLoading(false)
+                }
+            })
         })
 
         detailViewModel.followers.observe(requireActivity(), {
@@ -40,18 +48,14 @@ class FollowersFragment : Fragment() {
             }
         })
 
-        viewModel.listUser.observe(requireActivity(), { user ->
-            setFollowersData(user)
-        })
-
-        viewModel.isLoading.observe(requireActivity(), {
-            showLoading(it)
-        })
+    }
+    private fun obtainViewModel(activity: AppCompatActivity): FollowersViewModel {
+        val factory = ViewModelFactory.getInstance(activity.application, pref = null)
+        return ViewModelProvider(activity, factory)[FollowersViewModel::class.java]
     }
 
-
-    private fun setFollowersData(followersResponse: List<ItemsItem>) {
-        val listFollowers = ArrayList<ItemsItem>()
+    private fun setFollowersData(followersResponse: List<UserResponse>) {
+        val listFollowers = ArrayList<UserResponse>()
 
         listFollowers.clear()
         for (i in followersResponse.indices) {

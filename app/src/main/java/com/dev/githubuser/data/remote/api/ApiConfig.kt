@@ -1,4 +1,4 @@
-package com.dev.githubuser.api
+package com.dev.githubuser.data.remote.api
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

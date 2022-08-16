@@ -16,10 +16,9 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dev.githubuser.R
-import com.dev.githubuser.adapter.UserAdapter
+import com.dev.githubuser.data.remote.responses.UserResponse
 import com.dev.githubuser.databinding.ActivityMainBinding
 import com.dev.githubuser.favorite.FavoriteActivity
-import com.dev.githubuser.responses.ItemsItem
 import com.dev.githubuser.settings.SettingPreferences
 import com.dev.githubuser.settings.SettingsActivity
 import com.dev.githubuser.settings.SettingsViewModel
@@ -111,8 +110,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUsersData(listItem: List<ItemsItem>) {
-        val listUser = ArrayList<ItemsItem>()
+    private fun setUsersData(listItem: List<UserResponse>) {
+        val listUser = ArrayList<UserResponse>()
 
         listUser.clear()
         for (i in listItem.indices) {

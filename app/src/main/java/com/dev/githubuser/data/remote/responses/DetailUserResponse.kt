@@ -1,8 +1,8 @@
-package com.dev.githubuser.responses
+package com.dev.githubuser.data.remote.responses
 
 import com.google.gson.annotations.SerializedName
 
-data class UserResponse(
+data class DetailUserResponse(
 
 	@field:SerializedName("followers")
 	val followers: Int,

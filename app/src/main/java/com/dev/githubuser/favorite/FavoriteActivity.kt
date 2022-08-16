@@ -2,9 +2,10 @@ package com.dev.githubuser.favorite
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import com.dev.githubuser.adapter.UserAdapter
+import com.dev.githubuser.main.UserAdapter
 import com.dev.githubuser.databinding.ActivityFavoriteBinding
 import com.dev.githubuser.settings.ViewModelFactory
 
@@ -19,7 +20,8 @@ class FavoriteActivity : AppCompatActivity() {
 
         val viewModel = obtainViewModel(this)
         viewModel.getFavoriteUsers().observe(this, { listUser ->
-            if (listUser != null) {
+            if (listUser.isNotEmpty()) {
+                binding.tvNoData.visibility = View.GONE
                 userAdapter = UserAdapter(listUser, 3)
                 userAdapter.setListUser(listUser)
                 with(binding.rvUser) {
@@ -27,6 +29,8 @@ class FavoriteActivity : AppCompatActivity() {
                     adapter = userAdapter
                     setHasFixedSize(true)
                 }
+            } else {
+                binding.tvNoData.visibility = View.VISIBLE
             }
         })
 

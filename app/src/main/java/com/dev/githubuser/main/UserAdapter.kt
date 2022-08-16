@@ -1,4 +1,4 @@
-package com.dev.githubuser.adapter
+package com.dev.githubuser.main
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -8,16 +8,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dev.githubuser.databinding.ListUserBinding
 import com.dev.githubuser.databinding.UserFollowsBinding
-import com.dev.githubuser.db.User
+import com.dev.githubuser.data.local.db.UserEntity
+import com.dev.githubuser.data.remote.responses.UserResponse
 import com.dev.githubuser.detail.DetailActivity
-import com.dev.githubuser.responses.ItemsItem
 import com.dev.githubuser.util.UserDiffCallback
 
 
 class UserAdapter(private val listUser: List<Any>, private val viewType: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val listFavoriteUsers = ArrayList<User>()
+    private val listFavoriteUsers = ArrayList<UserEntity>()
 
-    fun setListUser(listFavorite: List<User>) {
+    fun setListUser(listFavorite: List<UserEntity>) {
         val diffCallback = UserDiffCallback(this.listFavoriteUsers, listFavorite)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
         this.listFavoriteUsers.clear()
@@ -32,7 +32,7 @@ class UserAdapter(private val listUser: List<Any>, private val viewType: Int) : 
     }
 
     class GridVH(private var binding: ListUserBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(user: ItemsItem) {
+        fun bind(user: UserResponse) {
             with(binding) {
                 tvUsername.text = user.login
             }
@@ -41,19 +41,19 @@ class UserAdapter(private val listUser: List<Any>, private val viewType: Int) : 
                 .into(binding.ivUser)
         }
 
-        fun bindFavUsers(user: User) {
+        fun bindFavUsers(userEntity: UserEntity) {
             with(binding) {
-                tvUser.text = user.name
-                tvUsername.text = user.username
+                tvUser.text = userEntity.name
+                tvUsername.text = userEntity.username
             }
             Glide .with(itemView.context)
-                .load(user.avatar)
+                .load(userEntity.avatar)
                 .into(binding.ivUser)
         }
     }
 
     class ListVH(private var binding: UserFollowsBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(user: ItemsItem) {
+        fun bind(user: UserResponse) {
             with(binding) {
                 tvUsername.text = user.login
             }
@@ -95,7 +95,7 @@ class UserAdapter(private val listUser: List<Any>, private val viewType: Int) : 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         return when (holder.itemViewType) {
             ONE -> {
-                val list = listUser[position] as ItemsItem
+                val list = listUser[position] as UserResponse
                 val gridHolder = holder as GridVH
                 gridHolder.bind(list)
                 gridHolder.itemView.setOnClickListener {
@@ -108,7 +108,7 @@ class UserAdapter(private val listUser: List<Any>, private val viewType: Int) : 
             }
             TWO -> {
                 val listHolder = holder as ListVH
-                val list = listUser[position] as ItemsItem
+                val list = listUser[position] as UserResponse
                 listHolder.bind(list)
             }
             THREE -> {

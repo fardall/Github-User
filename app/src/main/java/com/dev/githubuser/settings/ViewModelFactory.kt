@@ -4,11 +4,13 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dev.githubuser.detail.DetailViewModel
+import com.dev.githubuser.domain.UserUseCase
 import com.dev.githubuser.favorite.FavoriteViewModel
-import com.dev.githubuser.main.MainViewModel
-import java.lang.IllegalArgumentException
+import com.dev.githubuser.di.Injection
+import com.dev.githubuser.followers.FollowersViewModel
+import com.dev.githubuser.following.FollowingViewModel
 
-class ViewModelFactory private constructor(private val mApplication: Application, private val pref: SettingPreferences?) : ViewModelProvider.NewInstanceFactory() {
+class ViewModelFactory private constructor(private val useCase: UserUseCase, private val pref: SettingPreferences?) : ViewModelProvider.NewInstanceFactory() {
     companion object {
         @Volatile
         private var INSTANCE: ViewModelFactory? = null
@@ -17,7 +19,7 @@ class ViewModelFactory private constructor(private val mApplication: Application
         fun getInstance(application: Application, pref: SettingPreferences?): ViewModelFactory {
             if (INSTANCE == null) {
                 synchronized(ViewModelFactory::class.java) {
-                    INSTANCE = ViewModelFactory(application, pref)
+                    INSTANCE = ViewModelFactory(Injection.provideUseCase(application), pref)
                 }
             }
             return INSTANCE as ViewModelFactory
@@ -31,10 +33,16 @@ class ViewModelFactory private constructor(private val mApplication: Application
                 SettingsViewModel(pref) as T
             }
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
-                DetailViewModel(mApplication) as T
+                DetailViewModel(useCase) as T
             }
             modelClass.isAssignableFrom(FavoriteViewModel::class.java) -> {
-                FavoriteViewModel(mApplication) as T
+                FavoriteViewModel(useCase) as T
+            }
+            modelClass.isAssignableFrom(FollowersViewModel::class.java) -> {
+                FollowersViewModel(useCase) as T
+            }
+            modelClass.isAssignableFrom(FollowingViewModel::class.java) -> {
+                FollowingViewModel(useCase) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel Class")
         }

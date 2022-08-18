@@ -1,6 +1,7 @@
 package com.dev.githubuser.detail
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dev.githubuser.domain.User
@@ -16,7 +17,7 @@ class DetailViewModel(private val useCase: UserUseCase) : ViewModel() {
         useCase.delete(user)
     }
 
-    fun isExist(username: String): LiveData<Int> = useCase.isExist(username)
+    fun isExist(username: String): LiveData<Int> = LiveDataReactiveStreams.fromPublisher(useCase.isExist(username))
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -27,6 +28,6 @@ class DetailViewModel(private val useCase: UserUseCase) : ViewModel() {
 
     val username = MutableLiveData<String>()
 
-    fun getUser(username: String): LiveData<User> = useCase.getUser(username)
+    fun getUser(username: String): LiveData<User> = LiveDataReactiveStreams.fromPublisher(useCase.getUser(username))
 
 }

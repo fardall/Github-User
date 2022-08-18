@@ -1,9 +1,9 @@
 package com.dev.githubuser.domain
 
-import androidx.lifecycle.LiveData
+import io.reactivex.Flowable
 
 class UserInteractor(private val userRepository: IUserRepository) : UserUseCase {
-    override fun getFavoriteUsers(): LiveData<List<User>> {
+    override fun getFavoriteUsers(): Flowable<List<User>> {
         return userRepository.getFavoriteUsers()
     }
 
@@ -15,23 +15,23 @@ class UserInteractor(private val userRepository: IUserRepository) : UserUseCase 
         return userRepository.delete(user)
     }
 
-    override fun isExist(username: String): LiveData<Int> {
+    override fun isExist(username: String): Flowable<Int> {
         return userRepository.isExist(username)
     }
 
-    override fun getFollowers(username: String): LiveData<List<User>> {
+    override fun getFollowers(username: String): Flowable<List<User>> {
         return userRepository.getFollowers(username)
     }
 
-    override fun getFollowing(username: String): LiveData<List<User>> {
+    override fun getFollowing(username: String): Flowable<List<User>> {
         return userRepository.getFollowing(username)
     }
 
-    override fun findUser(username: String): LiveData<List<User>> {
+    override fun findUser(username: String): Flowable<List<User>> {
         return userRepository.findUser(username)
     }
 
-    override fun getUser(username: String): LiveData<User> {
+    override fun getUser(username: String): Flowable<User> {
         return userRepository.getUser(username)
     }
 }

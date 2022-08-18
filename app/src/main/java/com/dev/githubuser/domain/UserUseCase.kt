@@ -1,21 +1,21 @@
 package com.dev.githubuser.domain
 
-import androidx.lifecycle.LiveData
+import io.reactivex.Flowable
 
 interface UserUseCase {
-    fun getFavoriteUsers(): LiveData<List<User>>
+    fun getFavoriteUsers(): Flowable<List<User>>
 
     fun insert(user: User)
 
     fun delete(user: String)
 
-    fun isExist(username: String): LiveData<Int>
+    fun isExist(username: String): Flowable<Int>
 
-    fun getFollowers(username: String): LiveData<List<User>>
+    fun getFollowers(username: String): Flowable<List<User>>
 
-    fun getFollowing(username: String): LiveData<List<User>>
+    fun getFollowing(username: String): Flowable<List<User>>
 
-    fun findUser(username: String): LiveData<List<User>>
+    fun findUser(username: String): Flowable<List<User>>
 
-    fun getUser(username: String): LiveData<User>
+    fun getUser(username: String): Flowable<User>
 }

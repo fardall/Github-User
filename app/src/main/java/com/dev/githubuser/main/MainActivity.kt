@@ -50,8 +50,8 @@ class MainActivity : AppCompatActivity() {
         viewModel.query.value = "fardal"
 
         viewModel.query.observe(this) {
+            showLoading(true)
             viewModel.findUser(it).observe(this@MainActivity) { listUser ->
-                showLoading(true)
                 if (listUser.isEmpty()) {
                     binding.tvNoData.visibility = View.VISIBLE
                 } else {

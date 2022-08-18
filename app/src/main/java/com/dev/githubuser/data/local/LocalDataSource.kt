@@ -1,8 +1,8 @@
 package com.dev.githubuser.data.local
 
-import androidx.lifecycle.LiveData
 import com.dev.githubuser.data.local.db.UserDao
 import com.dev.githubuser.data.local.db.UserEntity
+import io.reactivex.Flowable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -19,7 +19,7 @@ class LocalDataSource private constructor(private val userDao: UserDao
             }
     }
 
-    fun getFavoriteUsers(): LiveData<List<UserEntity>> {
+    fun getFavoriteUsers(): Flowable<List<UserEntity>> {
         return userDao.getFavoriteUsers()
     }
 
@@ -31,7 +31,7 @@ class LocalDataSource private constructor(private val userDao: UserDao
         executorService.execute { userDao.delete(user) }
     }
 
-    fun isExist(username: String): LiveData<Int> {
+    fun isExist(username: String): Flowable<Int> {
         return userDao.count(username)
     }
 

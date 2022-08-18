@@ -1,6 +1,7 @@
 package com.dev.githubuser.domain
 
 import io.reactivex.Flowable
+import kotlinx.coroutines.flow.Flow
 
 interface IUserRepository {
     fun getFavoriteUsers(): Flowable<List<User>>
@@ -17,5 +18,5 @@ interface IUserRepository {
 
     fun findUser(username: String): Flowable<List<User>>
 
-    fun getUser(username: String): Flowable<User>
+    fun getUser(username: String): Flow<User>
 }

@@ -1,15 +1,16 @@
 package com.dev.githubuser.data.local.db
 
-import androidx.lifecycle.LiveData
-import androidx.room.*
-import io.reactivex.Completable
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import io.reactivex.Flowable
 
 @Dao
 interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(userEntity: UserEntity): Completable
+    fun insert(userEntity: UserEntity)
 
     @Query("DELETE from UserEntity WHERE username = :username")
     fun delete(username: String)

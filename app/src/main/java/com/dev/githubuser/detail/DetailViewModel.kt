@@ -1,9 +1,6 @@
 package com.dev.githubuser.detail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.LiveDataReactiveStreams
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.dev.githubuser.domain.User
 import com.dev.githubuser.domain.UserUseCase
 
@@ -28,6 +25,6 @@ class DetailViewModel(private val useCase: UserUseCase) : ViewModel() {
 
     val username = MutableLiveData<String>()
 
-    fun getUser(username: String): LiveData<User> = LiveDataReactiveStreams.fromPublisher(useCase.getUser(username))
+    fun getUser(username: String): LiveData<User> = useCase.getUser(username).asLiveData()
 
 }

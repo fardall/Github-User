@@ -1,6 +1,7 @@
 package com.dev.githubuser.domain
 
 import io.reactivex.Flowable
+import kotlinx.coroutines.flow.Flow
 
 class UserInteractor(private val userRepository: IUserRepository) : UserUseCase {
     override fun getFavoriteUsers(): Flowable<List<User>> {
@@ -31,7 +32,7 @@ class UserInteractor(private val userRepository: IUserRepository) : UserUseCase 
         return userRepository.findUser(username)
     }
 
-    override fun getUser(username: String): Flowable<User> {
+    override fun getUser(username: String): Flow<User> {
         return userRepository.getUser(username)
     }
 }

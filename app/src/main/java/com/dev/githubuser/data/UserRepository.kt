@@ -6,6 +6,8 @@ import com.dev.githubuser.domain.IUserRepository
 import com.dev.githubuser.domain.User
 import com.dev.githubuser.util.DataMapper
 import io.reactivex.Flowable
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class UserRepository private constructor(
     private val localDataSource: LocalDataSource,
@@ -50,7 +52,7 @@ class UserRepository private constructor(
         return remoteDataSource.findUser(username).map { DataMapper.mapResponsesToDomain(it.items) }
     }
 
-    override fun getUser(username: String): Flowable<User> {
+    override fun getUser(username: String): Flow<User> {
         return remoteDataSource.getUser(username).map { DataMapper.mapResponseToDomain(it) }
     }
 }

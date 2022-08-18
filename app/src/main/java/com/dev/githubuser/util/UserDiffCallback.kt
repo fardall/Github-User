@@ -1,21 +1,21 @@
 package com.dev.githubuser.util
 
 import androidx.recyclerview.widget.DiffUtil
-import com.dev.githubuser.data.local.db.UserEntity
+import com.dev.githubuser.domain.User
 
-class UserDiffCallback(private val mOldUserEntityList: List<UserEntity>, private val mNewUserEntityList: List<UserEntity>) : DiffUtil.Callback() {
+class UserDiffCallback(private val mOldUserList: List<User>, private val mNewUserList: List<User>) : DiffUtil.Callback() {
     override fun getOldListSize(): Int {
-        return mOldUserEntityList.size
+        return mOldUserList.size
     }
     override fun getNewListSize(): Int {
-        return mNewUserEntityList.size
+        return mNewUserList.size
     }
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return mOldUserEntityList[oldItemPosition].id == mNewUserEntityList[newItemPosition].id
+        return mOldUserList[oldItemPosition].login == mNewUserList[newItemPosition].login
     }
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldUser = mOldUserEntityList[oldItemPosition]
-        val newUser = mNewUserEntityList[newItemPosition]
-        return oldUser.name == newUser.name && oldUser.username == newUser.username
+        val oldUser = mOldUserList[oldItemPosition]
+        val newUser = mNewUserList[newItemPosition]
+        return oldUser.name == newUser.name && oldUser.login == newUser.login
     }
 }

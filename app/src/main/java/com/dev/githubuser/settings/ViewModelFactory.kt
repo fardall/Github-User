@@ -9,6 +9,7 @@ import com.dev.githubuser.favorite.FavoriteViewModel
 import com.dev.githubuser.di.Injection
 import com.dev.githubuser.followers.FollowersViewModel
 import com.dev.githubuser.following.FollowingViewModel
+import com.dev.githubuser.main.MainViewModel
 
 class ViewModelFactory private constructor(private val useCase: UserUseCase, private val pref: SettingPreferences?) : ViewModelProvider.NewInstanceFactory() {
     companion object {
@@ -31,6 +32,9 @@ class ViewModelFactory private constructor(private val useCase: UserUseCase, pri
         return when {
             modelClass.isAssignableFrom(SettingsViewModel::class.java) -> {
                 SettingsViewModel(pref) as T
+            }
+            modelClass.isAssignableFrom(MainViewModel::class.java) -> {
+                MainViewModel(useCase) as T
             }
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 DetailViewModel(useCase) as T

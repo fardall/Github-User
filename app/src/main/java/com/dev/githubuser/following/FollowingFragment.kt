@@ -8,9 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dev.githubuser.data.remote.responses.UserResponse
 import com.dev.githubuser.databinding.FragmentFollowingBinding
 import com.dev.githubuser.detail.DetailViewModel
+import com.dev.githubuser.domain.User
 import com.dev.githubuser.main.UserAdapter
 import com.dev.githubuser.settings.ViewModelFactory
 
@@ -55,8 +55,8 @@ class FollowingFragment : Fragment() {
         return ViewModelProvider(activity, factory)[FollowingViewModel::class.java]
     }
 
-    private fun setFollowingData(followingResponse: List<UserResponse>) {
-        val listFollowing = ArrayList<UserResponse>()
+    private fun setFollowingData(followingResponse: List<User>) {
+        val listFollowing = ArrayList<User>()
 
         listFollowing.clear()
         for (i in followingResponse.indices) {

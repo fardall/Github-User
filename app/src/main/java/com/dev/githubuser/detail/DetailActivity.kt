@@ -13,14 +13,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.dev.githubuser.R
 import com.dev.githubuser.databinding.ActivityDetailBinding
-import com.dev.githubuser.data.local.db.UserEntity
-import com.dev.githubuser.data.remote.responses.DetailUserResponse
+import com.dev.githubuser.domain.User
 import com.dev.githubuser.settings.ViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
-    private lateinit var favUserEntity: UserEntity
+    private lateinit var favUser: User
 
     companion object {
         const val EXTRA_USERNAME = "extra_username"
@@ -45,26 +44,26 @@ class DetailActivity : AppCompatActivity() {
         // Accept input username in order to fetch Github API
         viewModel.username.value = intent.getStringExtra(EXTRA_USERNAME)!!
 
-        viewModel.username.observe(this, { username ->
+        viewModel.username.observe(this) { username ->
             // Find user by username on Github API
-            viewModel.getUser(username)
 
             // Check if the username is exist on RoomDB
-            viewModel.isExist(username).observe(this, { data ->
+            viewModel.isExist(username).observe(this) { data ->
 
-                viewModel.detailUser.observe(this, { user ->
+                viewModel.getUser(username).observe(this) { user ->
                     setUserData(user)
-                    favUserEntity = UserEntity(name = user.name, username = user.login, avatar = user.avatarUrl)
-
+                    favUser = User(name = user.name, login = user.login, avatarUrl = user.avatarUrl)
+                    viewModel.followers.value = user.followers
+                    viewModel.following.value = user.following
                     // Set FAB Color based on isExist value
                     setFab(data, viewModel)
-                })
-            })
-        })
+                }
+            }
+        }
 
-        viewModel.isLoading.observe(this, {
+        viewModel.isLoading.observe(this) {
             showLoading(it)
-        })
+        }
 
         setTabPager()
 
@@ -86,7 +85,7 @@ class DetailActivity : AppCompatActivity() {
                 setOnClickListener {
                     isEnabled = false
                     imageTintList = ColorStateList.valueOf(Color.RED)
-                    viewModel.insert(favUserEntity)
+                    viewModel.insert(favUser)
 
                     makeToast("Berhasil Menambah Data")
                     isEnabled = true
@@ -99,7 +98,7 @@ class DetailActivity : AppCompatActivity() {
                 setOnClickListener {
                     isEnabled = false
                     imageTintList = ColorStateList.valueOf(Color.WHITE)
-                    viewModel.delete(favUserEntity.username!!)
+                    viewModel.delete(favUser.login!!)
 
                     makeToast("Berhasil Menghapus Data")
                     isEnabled = true
@@ -122,7 +121,7 @@ class DetailActivity : AppCompatActivity() {
         supportActionBar?.elevation = 0f
     }
 
-    private fun setUserData(detailUser: DetailUserResponse?) {
+    private fun setUserData(detailUser: User?) {
         if (detailUser != null) {
             with(binding.includeUser) {
                 tvUser.text = detailUser.name

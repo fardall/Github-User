@@ -11,6 +11,13 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
+
+    ext.rxjava_version = "2.2.19"
+    ext.rxandroid_version = "2.1.1"
+    ext.lifecycle_version = "2.2.0"
+    ext.room_version = "2.4.2"
+    ext.retrofit_version = "2.9.0"
+
 }
 
 task clean(type: Delete) {

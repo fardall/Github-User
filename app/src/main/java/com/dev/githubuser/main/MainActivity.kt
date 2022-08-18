@@ -16,8 +16,8 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dev.githubuser.R
-import com.dev.githubuser.data.remote.responses.UserResponse
 import com.dev.githubuser.databinding.ActivityMainBinding
+import com.dev.githubuser.domain.User
 import com.dev.githubuser.favorite.FavoriteActivity
 import com.dev.githubuser.settings.SettingPreferences
 import com.dev.githubuser.settings.SettingsActivity
@@ -34,40 +34,44 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        viewModel = obtainMainViewModel(this)
         val pref = SettingPreferences.getInstance(dataStore)
         val settingsViewModel = obtainViewModel(this, pref)
 
-        settingsViewModel.getThemeSettings()?.observe(this,
-            { isDarkModeActive: Boolean ->
-                if (isDarkModeActive) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                }
-            })
-
-        viewModel.findUser()
-
-        viewModel.listUser.observe(this, { listUser ->
-            if (listUser.isEmpty()) {
-                binding.tvNoData.visibility = View.VISIBLE
+        settingsViewModel.getThemeSettings()?.observe(this
+        ) { isDarkModeActive: Boolean ->
+            if (isDarkModeActive) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             } else {
-                binding.tvNoData.visibility = View.GONE
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
-            setUsersData(listUser)
+        }
 
-        })
+        viewModel.query.value = "fardal"
 
-        viewModel.isLoading.observe(this, {
-            showLoading(it)
-        })
+        viewModel.query.observe(this) {
+            viewModel.findUser(it).observe(this@MainActivity) { listUser ->
+                showLoading(true)
+                if (listUser.isEmpty()) {
+                    binding.tvNoData.visibility = View.VISIBLE
+                } else {
+                    binding.tvNoData.visibility = View.GONE
+                }
+                setUsersData(listUser)
+                showLoading(false)
+            }
+        }
 
     }
 
     private fun obtainViewModel(activity: AppCompatActivity, preferences: SettingPreferences): SettingsViewModel {
         val factory = ViewModelFactory.getInstance(activity.application, pref = preferences)
         return ViewModelProvider(activity, factory)[SettingsViewModel::class.java]
+    }
+
+    private fun obtainMainViewModel(activity: AppCompatActivity): MainViewModel {
+        val factory = ViewModelFactory.getInstance(activity.application, pref = null)
+        return ViewModelProvider(activity, factory)[MainViewModel::class.java]
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -81,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         searchView.queryHint = "Masukkan Kata" // Hint
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                viewModel.findUser(query) // cari user
+                viewModel.query.value = query
                 searchView.clearFocus() // Hapus Duplikat Kata
                 return true
             }
@@ -110,8 +114,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUsersData(listItem: List<UserResponse>) {
-        val listUser = ArrayList<UserResponse>()
+    private fun setUsersData(listItem: List<User>) {
+        val listUser = ArrayList<User>()
 
         listUser.clear()
         for (i in listItem.indices) {
@@ -134,5 +138,9 @@ class MainActivity : AppCompatActivity() {
         } else {
             binding.progressBar.visibility = View.GONE
         }
+    }
+
+    companion object {
+        private const val TAG = "asd"
     }
 }

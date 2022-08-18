@@ -1,19 +1,21 @@
 package com.dev.githubuser.domain
 
 import androidx.lifecycle.LiveData
-import com.dev.githubuser.data.local.db.UserEntity
-import com.dev.githubuser.data.remote.responses.UserResponse
 
 interface UserUseCase {
-    fun getFavoriteUsers(): LiveData<List<UserEntity>>
+    fun getFavoriteUsers(): LiveData<List<User>>
 
-    fun insert(userEntity: UserEntity)
+    fun insert(user: User)
 
     fun delete(user: String)
 
     fun isExist(username: String): LiveData<Int>
 
-    fun getFollowers(username: String): LiveData<List<UserResponse>>
+    fun getFollowers(username: String): LiveData<List<User>>
 
-    fun getFollowing(username: String): LiveData<List<UserResponse>>
+    fun getFollowing(username: String): LiveData<List<User>>
+
+    fun findUser(username: String): LiveData<List<User>>
+
+    fun getUser(username: String): LiveData<User>
 }

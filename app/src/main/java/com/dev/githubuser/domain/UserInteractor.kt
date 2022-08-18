@@ -1,16 +1,14 @@
 package com.dev.githubuser.domain
 
 import androidx.lifecycle.LiveData
-import com.dev.githubuser.data.local.db.UserEntity
-import com.dev.githubuser.data.remote.responses.UserResponse
 
 class UserInteractor(private val userRepository: IUserRepository) : UserUseCase {
-    override fun getFavoriteUsers(): LiveData<List<UserEntity>> {
+    override fun getFavoriteUsers(): LiveData<List<User>> {
         return userRepository.getFavoriteUsers()
     }
 
-    override fun insert(userEntity: UserEntity) {
-        return userRepository.insert(userEntity)
+    override fun insert(user: User) {
+        return userRepository.insert(user)
     }
 
     override fun delete(user: String) {
@@ -21,11 +19,19 @@ class UserInteractor(private val userRepository: IUserRepository) : UserUseCase 
         return userRepository.isExist(username)
     }
 
-    override fun getFollowers(username: String): LiveData<List<UserResponse>> {
+    override fun getFollowers(username: String): LiveData<List<User>> {
         return userRepository.getFollowers(username)
     }
 
-    override fun getFollowing(username: String): LiveData<List<UserResponse>> {
+    override fun getFollowing(username: String): LiveData<List<User>> {
         return userRepository.getFollowing(username)
+    }
+
+    override fun findUser(username: String): LiveData<List<User>> {
+        return userRepository.findUser(username)
+    }
+
+    override fun getUser(username: String): LiveData<User> {
+        return userRepository.getUser(username)
     }
 }
